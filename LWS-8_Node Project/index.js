@@ -1,6 +1,7 @@
 //Dependancies
 
 const http = require('http');
+const url = require('url')
 
 //App object - Module Scaffolding
 
@@ -23,6 +24,18 @@ app.serverCreate = function(){
 }
 
 app.handleReqRes = function(req, res){
+    //handle req
+    const parseUrl = url.parse(req.url, true);
+    const path = parseUrl.pathname;
+    const trimmedPath = path.replace(/^\/+|\/+$/g, "")
+    const method = req.method.toLowerCase()
+    const quaryObject = parseUrl.query
+        console.log(quaryObject)
+
+
+
+
+
 
     //handle res
     res.end('Hellow Programars')
