@@ -1,8 +1,11 @@
+
 //Dependancies
 
 const http = require('http');
-const url = require('url')
 
+const {handleReqRes} = require('./helper/handleReqRes');
+const { log } = require('console');
+const { compact } = require('lodash');
 //App object - Module Scaffolding
 
 const app = {};
@@ -23,22 +26,9 @@ app.serverCreate = function(){
     })
 }
 
-app.handleReqRes = function(req, res){
-    //handle req
-    const parseUrl = url.parse(req.url, true);
-    const path = parseUrl.pathname;
-    const trimmedPath = path.replace(/^\/+|\/+$/g, "")
-    const method = req.method.toLowerCase()
-    const quaryObject = parseUrl.query
-        console.log(quaryObject)
-
-
-
-
-
-
-    //handle res
-    res.end('Hellow Programars')
-}
+app.handleReqRes = handleReqRes;
 
 app.serverCreate();
+
+
+
