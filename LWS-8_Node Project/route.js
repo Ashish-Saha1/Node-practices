@@ -6,7 +6,7 @@
  */
 
 //Dependancies
-const {sampleHandlar} = require('./LWS-8_Node Project/Handlar/Route Handlar/sampleHandlar')
+const {sampleHandlar} = require('./Handlar/Route Handlar/sampleHandlar')
 
 // Module Scaffolding
 
