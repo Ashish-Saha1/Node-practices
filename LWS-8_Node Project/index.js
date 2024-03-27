@@ -4,8 +4,9 @@
 const http = require('http');
 
 const {handleReqRes} = require('./helper/handleReqRes');
-const { log } = require('console');
-const { compact } = require('lodash');
+// const { log } = require('console');
+// const { compact } = require('lodash');
+
 //App object - Module Scaffolding
 
 const app = {};

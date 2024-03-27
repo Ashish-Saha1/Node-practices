@@ -2,9 +2,8 @@
 
 //Dependancies
 const url = require('url');
-const {StringDecoder} = require('string_decoder')
+const {StringDecoder} = require('string_decoder') //Its a class
 const routes = require('../route');
-const {sampleHandlar} = require('../Handlar/Route Handlar/sampleHandlar');
 const {notFoundHandlars} = require('../Handlar/Route Handlar/notFoundHandlars');
 
 // Module Scaffolding
@@ -36,8 +35,15 @@ handler.handleReqRes = function(req, res){
    
 
     const chosenHandlar = routes[trimmedPath] ? routes[trimmedPath]: notFoundHandlars;
+    
+    chosenHandlar(requestProperties, (statusCode, payload)=>{
+        statusCode = typeof(statusCode) === 'number'? statusCode: 500;
+        payload = typeof(payload) === 'object'? payload: {};
 
-
+        const payloadString = JSON.stringify(payload);
+         res.writeHead(statusCode);
+         res.end(payloadString);
+    })
 
     req.on('data', (buffer)=>{
         realData += decoder.write(buffer)
@@ -45,7 +51,7 @@ handler.handleReqRes = function(req, res){
 
     req.on('end', ()=>{
         realData += decoder.end()
-      console.log(realData)
+    
         res.end('Hellow Programars')
     })
 

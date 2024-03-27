@@ -7,11 +7,15 @@
 
 //Dependancies
 const {sampleHandlar} = require('./Handlar/Route Handlar/sampleHandlar')
+const {aboutHandlar} = require('./Handlar/Route Handlar/aboutHandlar')
+const {blankHandlar} = require('./Handlar/Route Handlar/blankHandlar')
 
 // Module Scaffolding
 
 const routes = {
     sample: sampleHandlar,
+    about: aboutHandlar,
+    "": blankHandlar
 };
 
 

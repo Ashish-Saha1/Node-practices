@@ -1,6 +1,6 @@
 /**
- * Title: Sample handlar
- * Description:Sample handlar
+ * Title: About Handlar
+ * Description:About Handlar
  * Author: Ashish Saha
  * Date: 2024-03-24
  */
@@ -9,10 +9,10 @@
 
     const handle = {};
 
-    handle.sampleHandlar = (requestProperties, callback)=>{
+    handle.aboutHandlar = (requestProperties, callback)=>{
         //console.log(requestProperties);
         callback(200, {
-            'message': 'This is a sample URL'
+            'message': 'This is a sample URL For about Handlar'
         })
     }
 
