@@ -35,7 +35,7 @@ handler.handleReqRes = function(req, res){
    
 
     const chosenHandlar = routes[trimmedPath] ? routes[trimmedPath]: notFoundHandlars;
-    
+
     chosenHandlar(requestProperties, (statusCode, payload)=>{
         statusCode = typeof(statusCode) === 'number'? statusCode: 500;
         payload = typeof(payload) === 'object'? payload: {};

@@ -11,7 +11,7 @@
 
     handle.notFoundHandlars = (requestProperties, callback)=>{
         //console.log(requestProperties);
-        callback(500, {
+        callback(404, {
             'message': 'Requested URL was not found'
         })
     }
