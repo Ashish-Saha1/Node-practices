@@ -4,6 +4,7 @@
 const http = require('http');
 
 const {handleReqRes} = require('./helper/handleReqRes');
+const environments = require('./helper/environment')
 // const { log } = require('console');
 // const { compact } = require('lodash');
 
@@ -13,17 +14,18 @@ const app = {};
 
 // configuration
 
-app.config = {
-    port: 3000
-};
+// app.config = {
+//     port: 3000
+// };
 
 
 //Server Create
 
 app.serverCreate = function(){
     const server = http.createServer(app.handleReqRes);
-    server.listen(app.config.port, ()=>{
-        console.log(`Server is running on port no ${app.config.port}`)
+    server.listen(environments.port, ()=>{
+        console.log(`Node environment is running in production port ${environments.port}`)
+        console.log(`Server is running on port no ${environments.port}`)
     })
 }
 

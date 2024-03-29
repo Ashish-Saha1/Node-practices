@@ -6,6 +6,7 @@ const {StringDecoder} = require('string_decoder') //Its a class
 const routes = require('../route');
 const {notFoundHandlars} = require('../Handlar/Route Handlar/notFoundHandlars');
 
+
 // Module Scaffolding
 
 const handler = {};
@@ -36,14 +37,16 @@ handler.handleReqRes = function(req, res){
 
     const chosenHandlar = routes[trimmedPath] ? routes[trimmedPath]: notFoundHandlars;
 
-    chosenHandlar(requestProperties, (statusCode, payload)=>{
-        statusCode = typeof(statusCode) === 'number'? statusCode: 500;
-        payload = typeof(payload) === 'object'? payload: {};
+    // chosenHandlar(requestProperties, (statusCode, payload)=>{
+    //     statusCode = typeof(statusCode) === 'number'? statusCode: 500;
+    //     payload = typeof(payload) === 'object'? payload: {};
 
-        const payloadString = JSON.stringify(payload);
-         res.writeHead(statusCode);
-         res.end(payloadString);
-    })
+    //     const payloadString = JSON.stringify(payload);
+    //      res.writeHead(statusCode);
+    //      res.end(payloadString);
+    // })
+
+    
 
     req.on('data', (buffer)=>{
         realData += decoder.write(buffer)
@@ -52,7 +55,16 @@ handler.handleReqRes = function(req, res){
     req.on('end', ()=>{
         realData += decoder.end()
     
-        res.end('Hellow Programars')
+        chosenHandlar(requestProperties, (statusCode, payload)=>{
+            statusCode = typeof(statusCode) === 'number'? statusCode: 500;
+            payload = typeof(payload) === 'object'? payload: {};
+    
+            const payloadString = JSON.stringify(payload);
+             res.writeHead(statusCode);
+             res.end(payloadString);
+        });
+
+        //res.end('Hellow Programars')
     })
 
 

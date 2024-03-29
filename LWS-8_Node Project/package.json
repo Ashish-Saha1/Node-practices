@@ -1,5 +1,17 @@
 {
+  "scripts": {
+    "start": "SET \"NODE_ENV=staging\" && nodemon index",
+    "pro": "SET \"NODE_ENV=production\" && nodemon  index "
+  },
   "dependencies": {
     "lodash": "^4.17.21"
-  }
+  },
+  "name": "lws-8_node-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
