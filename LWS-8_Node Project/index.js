@@ -4,7 +4,8 @@
 const http = require('http');
 
 const {handleReqRes} = require('./helper/handleReqRes');
-const environments = require('./helper/environment')
+const environments = require('./helper/environment');
+const data = require('./lib/data')
 // const { log } = require('console');
 // const { compact } = require('lodash');
 
@@ -17,6 +18,12 @@ const app = {};
 // app.config = {
 //     port: 3000
 // };
+
+// File write Testing
+
+data.create('test', 'NewFile', {'name': 'Bangladesh', 'language': 'Bangla'}, (error)=>{
+    console.log('Error is', error);
+})
 
 
 //Server Create
