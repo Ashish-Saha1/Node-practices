@@ -5,7 +5,8 @@ const http = require('http');
 
 const {handleReqRes} = require('./helper/handleReqRes');
 const environments = require('./helper/environment');
-const data = require('./lib/data')
+const data = require('./lib/data');
+const { error } = require('console');
 // const { log } = require('console');
 // const { compact } = require('lodash');
 
@@ -21,8 +22,26 @@ const app = {};
 
 // File write Testing
 
-data.create('test', 'NewFile', {'name': 'Bangladesh', 'language': 'Bangla'}, (error)=>{
-    console.log('Error is', error);
+// data.create('test', 'NewFile', {'name': 'Bangladesh', 'language': 'Bangla'}, (error)=>{
+//     console.log('Error is', error);
+// })
+
+// File Read
+
+// data.read('test', 'NewFile', (error, result)=>{
+//     console.log(error, result);
+// })
+
+//File Update
+
+// data.update('test', 'NewFile', {'name': 'India', 'language': 'Hindi'}, (error)=>{
+//     console.log('Error is', error);
+// })
+
+//File delete
+
+data.delete('test', 'NewFile', (error)=>{
+    console.log(error)
 })
 
 

@@ -53,5 +53,57 @@ lib.create = function(dir, file, data, callback){
 }
 
 
+//Read Data from file
+
+lib.read = function(dir, file, callback){
+    fs.readFile(`${lib.baseDir + dir}/${file}.json`,'utf8',(err, data)=>{
+            callback(err,data)
+    } )
+}
+
+// Update Data 
+
+lib.update = function(dir, file, data, callback){
+    fs.open(lib.baseDir+dir+"/"+file+".json", "r+", (err, fileDescriptor)=>{
+        if(!err && fileDescriptor){
+            const stringData = JSON.stringify(data);
+
+            fs.ftruncate(fileDescriptor, (err)=>{
+                if(!err){
+                    fs.writeFile(fileDescriptor, stringData, (err)=>{
+                        if(!err){
+                            fs.close(fileDescriptor,(err)=>{
+                                if(!err){
+                                    callback(false)
+                                }else{
+                                    callback('file close problem')
+                                }
+                            })
+                        }else{
+                            callback("File write problem")
+                        }
+                    })
+                }else{
+                    callback("truncate problem")
+                }
+            })
+        }else{
+            callback('File can not open')
+        }
+    })
+}
+
+//Delete Data
+
+lib.delete = function(dir,file,callback){
+    fs.unlink(lib.baseDir+dir+"/"+file+".json", (err)=>{
+        if(!err){
+            callback(false)
+        }else{
+            callback('Problem in deletion')
+        }
+    })
+}
+
 
 module.exports = lib;
