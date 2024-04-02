@@ -40,9 +40,9 @@ const app = {};
 
 //File delete
 
-data.delete('test', 'NewFile', (error)=>{
-    console.log(error)
-})
+// data.delete('test', 'NewFile', (error)=>{
+//     console.log(error)
+// })
 
 
 //Server Create

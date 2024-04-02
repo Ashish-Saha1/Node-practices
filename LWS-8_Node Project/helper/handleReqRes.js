@@ -60,6 +60,7 @@ handler.handleReqRes = function(req, res){
             payload = typeof(payload) === 'object'? payload: {};
     
             const payloadString = JSON.stringify(payload);
+             res.setHeader("content-Type", "application/json")
              res.writeHead(statusCode);
              res.end(payloadString);
         });
