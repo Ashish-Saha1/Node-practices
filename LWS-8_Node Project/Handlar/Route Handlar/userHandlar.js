@@ -7,7 +7,8 @@
 
     //depandencies
 
-    const {lib} = require('../../lib/data')
+    const data = require('../../lib/data');
+    const utilities = require("../../helper/utilities")
 
     //Modele scaffolding
 
@@ -39,9 +40,24 @@
 
        if(firstName && lastName && phone && password && tosAgreement){
             //Make sure user does not already exit
-            lib.read((users,phone, (err, data)=>{
+            data.read(('users',phone, (err)=>{
                 if(err){
-                    
+                    const userObject = {
+                        firstName,
+                        lastName,
+                        phone,
+                        password : utilities.hash(password),
+                        tosAgreement
+                    }
+
+                    data.creare('users', phone, userObject, (err)=>{
+                        if(!err){
+                            callback(200, {mess: 'user was created successfully'})
+                        }else{
+                            callback(500, {Err: "Server side Error"} )
+                        }
+                    })
+
                 }else{
                     callback(500, {
                         error: 'There was a problem in server side'
@@ -49,13 +65,10 @@
                     })
                 }
             }))
-            const userObject = {
-                firstName,
-                lastName,
-                phone,
-                password,
-                tosAgreement
-            }
+
+
+           callback('Hellow');
+            
 
        }else{
             callback(400, {

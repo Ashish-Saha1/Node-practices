@@ -15,12 +15,14 @@ const environments = {};
 
 environments.staging = {
     envName: "staging-Check", // Name is not environments.staging is working
-    port: 3000
+    port: 3000,
+    secretKey: "ieurieuriueir"
 }
 
 environments.production = {
     envName: "production-Check",
-    port: 5000
+    port: 5000,
+    secretKey: "dfdfdfdfdfdfd"
 }
 
 
