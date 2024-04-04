@@ -8,7 +8,8 @@
     //depandencies
 
     const data = require('../../lib/data');
-    const utilities = require("../../helper/utilities")
+    const utilities = require("../../helper/utilities");
+const { user } = require('../../route');
 
     //Modele scaffolding
 
@@ -37,45 +38,13 @@
        const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: true;
 
        const tosAgreement = typeof(requestProperties.body.tosAgreement) === 'boolean'? requestProperties.body.tosAgreement: false;
+        
 
-    //    if(firstName && lastName && phone && password && tosAgreement){
-    //         //Make sure user does not already exit
-    //         data.read(('users',phone, (err)=>{
-            
-    //             if(err){
-    //                 const userObject = {
-    //                     firstName,
-    //                     lastName,
-    //                     phone,
-    //                     password : utilities.hash(password),
-    //                     tosAgreement
-    //                 }
-
-    //                 data.create('users', phone, userObject, (err)=>{
-    //                     if(!err){
-    //                         callback(200, {mess: 'user was created successfully'})
-    //                     }else{
-    //                         callback(500, {Err: "Server side Error"} )
-    //                     }
-    //                 })
-
-    //             }else{
-    //                 callback(500, {
-    //                     error: 'There was a problem in server side'
-
-    //                 })
-    //             }
-    //         }))}
-
-
-           
-
-
-if(firstName && lastName && phone && password  && tosAgreement){
-    //Make sure user does not already exit
-data.read('users', phone, (err)=>{
-    if(err){
-        const userObject = {
+    if(firstName && lastName && phone && password  && tosAgreement){
+        //Make sure user does not already exit
+        data.read('users', phone, (err)=>{
+         if(err){
+            const userObject = {
             firstName,
             lastName,
             phone,
@@ -100,41 +69,34 @@ data.read('users', phone, (err)=>{
 }else{
     callback(400, {err: "You have a problem in your side"})
     
-}
-
-
-
-
-
-
-
-
-    
-//  const userObject = {
-//                     firstName,
-//                     lastName,
-//                     phone,
-//                     password : utilities.hash(password),
-//                     tosAgreement
-//                 }
-            
-//                 data.create('users', phone, userObject, (err)=>{
-//                     if(!err){
-//                         callback(200, {mess: 'user was created successfully'})
-//                     }else{
-//                         callback(500, {Err: "Server side Error"} )
-//                     }
-//                 })
-
-
-  
-
+    }
 
     }
 
     handle._user.get = (requestProperties, callback)=>{
-        
+        const phone = typeof(requestProperties.quaryObject.phone) === 'string' && requestProperties.quaryObject.phone.trim().length === 11 ? requestProperties.quaryObject.phone: false;
+
+        if(phone){
+            data.read('users', phone, (err, u)=>{
+                const user = {...utilities.parseJson(u)}
+                if(!err){
+                    delete user.password;
+                    callback(200, user)
+                }else{
+                    callback(404, `error: ${err}`)
+                    //callback(404, {"Error": "Requested data not found"})
+                                      
+                }
+
+                //callback(`Error:${err}`, user)
+                                
+            })
+        }else{
+            callback(400, {'Error': "A problem found in your request"})
+        }
      }
+
+
 
      handle._user.put = (requestProperties, callback)=>{
         
