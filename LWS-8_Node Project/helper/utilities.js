@@ -33,10 +33,11 @@ utility.parseJson = (str)=>{
 utility.hash = (str)=>{
     if(typeof(str) === 'string' && str.length > 0){
         const hash = crypto
-        .createHmac('sha256', environment[secretKey])
+        .createHmac('sha256', environment.secretKey)
         .update('str')
         .digest('hex');
-
+        // To show the Hash key in console
+        console.log("Hash key:",hash)
         return hash;
     }else{
         return false;

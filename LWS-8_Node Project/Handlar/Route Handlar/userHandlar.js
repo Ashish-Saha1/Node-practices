@@ -34,48 +34,100 @@
 
        const phone = typeof(requestProperties.body.phone) === 'string' && requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone: false;
 
-       const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: false;
+       const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: true;
 
        const tosAgreement = typeof(requestProperties.body.tosAgreement) === 'boolean'? requestProperties.body.tosAgreement: false;
 
-       if(firstName && lastName && phone && password && tosAgreement){
-            //Make sure user does not already exit
-            data.read(('users',phone, (err)=>{
+    //    if(firstName && lastName && phone && password && tosAgreement){
+    //         //Make sure user does not already exit
+    //         data.read(('users',phone, (err)=>{
             
-                if(err){
-                    const userObject = {
-                        firstName,
-                        lastName,
-                        phone,
-                        password : utilities.hash(password),
-                        tosAgreement
-                    }
+    //             if(err){
+    //                 const userObject = {
+    //                     firstName,
+    //                     lastName,
+    //                     phone,
+    //                     password : utilities.hash(password),
+    //                     tosAgreement
+    //                 }
 
-                    data.create('users', phone, userObject, (err)=>{
-                        if(!err){
-                            callback(200, {mess: 'user was created successfully'})
-                        }else{
-                            callback(500, {Err: "Server side Error"} )
-                        }
-                    })
+    //                 data.create('users', phone, userObject, (err)=>{
+    //                     if(!err){
+    //                         callback(200, {mess: 'user was created successfully'})
+    //                     }else{
+    //                         callback(500, {Err: "Server side Error"} )
+    //                     }
+    //                 })
 
-                }else{
-                    callback(500, {
-                        error: 'There was a problem in server side'
+    //             }else{
+    //                 callback(500, {
+    //                     error: 'There was a problem in server side'
 
-                    })
-                }
-            }))
+    //                 })
+    //             }
+    //         }))}
 
 
-           callback('Hellow');
+           
+
+
+if(firstName && lastName && phone && password  && tosAgreement){
+    //Make sure user does not already exit
+data.read('users', phone, (err)=>{
+    if(err){
+        const userObject = {
+            firstName,
+            lastName,
+            phone,
+            password : utilities.hash(password),
+            tosAgreement
+        }
+            //Ready to store data
+        data.create('users', phone, userObject, (err)=>{
+            if(!err){
+                callback(200, {mess: 'user was created successfully'})
+            }else{
+                
+                callback(500, {Err: "Server side Error"} )
+            }
+        })
+    }else{
+        callback(500, {err: "There was a problem in server side"})
+        
+    }
+})
+
+}else{
+    callback(400, {err: "You have a problem in your side"})
+    
+}
+
+
+
+
+
+
+
+
+    
+//  const userObject = {
+//                     firstName,
+//                     lastName,
+//                     phone,
+//                     password : utilities.hash(password),
+//                     tosAgreement
+//                 }
             
+//                 data.create('users', phone, userObject, (err)=>{
+//                     if(!err){
+//                         callback(200, {mess: 'user was created successfully'})
+//                     }else{
+//                         callback(500, {Err: "Server side Error"} )
+//                     }
+//                 })
 
-       }else{
-            callback(400, {
-                error: "You have a problem in your request"
-            })
-       }
+
+  
 
 
     }
