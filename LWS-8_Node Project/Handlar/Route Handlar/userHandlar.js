@@ -36,11 +36,12 @@
 
        const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: false;
 
-       const tosAgreement = typeof(requestProperties.body.tosAgreement) === 'boolean' && requestProperties.body.tosAgreement.trim().length > 0 ? requestProperties.body.tosAgreement: false;
+       const tosAgreement = typeof(requestProperties.body.tosAgreement) === 'boolean'? requestProperties.body.tosAgreement: false;
 
        if(firstName && lastName && phone && password && tosAgreement){
             //Make sure user does not already exit
             data.read(('users',phone, (err)=>{
+            
                 if(err){
                     const userObject = {
                         firstName,
@@ -50,7 +51,7 @@
                         tosAgreement
                     }
 
-                    data.creare('users', phone, userObject, (err)=>{
+                    data.create('users', phone, userObject, (err)=>{
                         if(!err){
                             callback(200, {mess: 'user was created successfully'})
                         }else{

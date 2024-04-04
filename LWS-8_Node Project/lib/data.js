@@ -57,7 +57,7 @@ lib.create = function(dir, file, data, callback){
 
 lib.read = function(dir, file, callback){
     fs.readFile(`${lib.baseDir + dir}/${file}.json`,'utf8',(err, data)=>{
-            callback(err,data)
+            callback(`Error: ${err}`, data)
     } )
 }
 
