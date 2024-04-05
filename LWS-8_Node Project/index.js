@@ -7,8 +7,7 @@ const {handleReqRes} = require('./helper/handleReqRes');
 const environments = require('./helper/environment');
 const data = require('./lib/data');
 const { error } = require('console');
-// const { log } = require('console');
-// const { compact } = require('lodash');
+
 
 //App object - Module Scaffolding
 

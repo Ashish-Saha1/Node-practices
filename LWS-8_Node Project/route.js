@@ -10,6 +10,7 @@ const {sampleHandlar} = require('./Handlar/Route Handlar/sampleHandlar')
 const {aboutHandlar} = require('./Handlar/Route Handlar/aboutHandlar')
 const {blankHandlar} = require('./Handlar/Route Handlar/blankHandlar')
 const {userHandlar} = require('./Handlar/Route Handlar/userHandlar')
+const {tokenHandlar} = require('./Handlar/Route Handlar/tokenhandlar')
 
 // Module Scaffolding
 
@@ -17,7 +18,8 @@ const routes = {
     sample: sampleHandlar,
     about: aboutHandlar,
     "": blankHandlar,
-    user: userHandlar
+    user: userHandlar,
+    token: tokenHandlar
 };
 
 
