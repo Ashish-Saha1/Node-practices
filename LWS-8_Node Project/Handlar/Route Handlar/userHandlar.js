@@ -79,7 +79,7 @@ const { user } = require('../../route');
         if(phone){
             data.read('users', phone, (err, u)=>{
                 const user = {...utilities.parseJson(u)}
-                if(!err){
+                if(user && !err){
                     delete user.password;
                     callback(200, user)
                 }else{
@@ -96,14 +96,76 @@ const { user } = require('../../route');
         }
      }
 
-
-
      handle._user.put = (requestProperties, callback)=>{
-        
+        const firstName = typeof(requestProperties.body.firstName) === 'string' && requestProperties.body.firstName.trim().length > 0 ? requestProperties.body.firstName: false;
+
+       const lastName = typeof(requestProperties.body.lastName) === 'string' && requestProperties.body.lastName.trim().length > 0 ? requestProperties.body.lastName: false;
+
+       const phone = typeof(requestProperties.body.phone) === 'string' && requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone: false;
+
+       const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: true;
+
+        if(phone){
+           data.read('users',phone, (err, userD)=>{
+                let userData = {...utilities.parseJson(userD)};
+                if(!err && userData){
+                    if(firstName){
+                        userData.firstName = firstName;
+                    }
+
+                    if(lastName){
+                        userData.lastName = lastName;
+                    }
+
+                    if(password){
+                        userData.password = utilities.hash(password);
+                    }
+
+                    data.update('users',phone, userData, (err)=>{
+                        if(!err){
+                            callback(200, {Massege: "Data update successfully"})
+                        }else{
+                            callback(500, {Error: "server side problem"})
+                        }
+                    })
+
+
+                }else{
+                    callback(400, {Error: "User Not found"})
+                }
+           })
+           
+
+
+        }else{
+            callback(400, {Error: "invalid phone number, please try again"})
+        }
+
+
+
      }
 
      handle._user.delete = (requestProperties, callback)=>{
-        
+        const phone = typeof(requestProperties.quaryObject.phone) === 'string' && requestProperties.quaryObject.phone.trim().length === 11 ? requestProperties.quaryObject.phone: false;
+
+        if(phone){
+            data.read('users', phone, (err)=>{
+                if(!err){
+                    data.delete('users',phone, (err)=>{
+                        if(!err){
+                            callback(200, {Message: "Delete Successfully"})
+                        }else{
+                            callback(500, {Error: "File deletation problem"})
+                        }
+                    })
+                }else{
+                    callback(400, {Error: "file Not found"})
+                }
+            })
+        }else{
+            callback(400, {Error: "Please input valid Phone "})
+        }
      }
+
 
     module.exports= handle;
