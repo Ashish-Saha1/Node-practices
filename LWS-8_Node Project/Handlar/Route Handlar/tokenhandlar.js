@@ -34,8 +34,18 @@
         const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: true;
  
         if(phone && password){
-            data.read('users',phone, (err, userData)=>{
-                
+            data.read('users',phone, (err, userD)=>{
+                let userData= utilities.parseJson(userD);
+                if(!err && userData){
+                    if(userData.password === utilities.hash(password)){
+                        let tokenId = createRandomString(20);
+                        let expair = Date.now() + 60 *60 *1000;
+                    }else{
+                        callback(400, {Error: "Password not match"})
+                    }
+                }else{
+                    callback(404, {Error: "May Error or file not found"})
+                }
             })
         }else{
             callback(400, {Error: "You have a problem in your side"})

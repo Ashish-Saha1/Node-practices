@@ -44,4 +44,22 @@ utility.hash = (str)=>{
     }
 }
 
+
+
+utility.createRandomString = (string)=>{
+    const probableCharacter = 'abcdefghijklmnopqrstuvwxyz1234567890'
+    let output = '';
+    for(let i =1; i<=string; i++){
+        let random = Math.round(Math.random()*probableCharacter.length)
+       output += probableCharacter.charAt(random)
+    }
+
+    return output;
+}
+
+
+
+
+
+
 module.exports = utility;
