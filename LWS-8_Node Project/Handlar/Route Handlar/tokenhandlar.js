@@ -40,6 +40,11 @@
                     if(userData.password === utilities.hash(password)){
                         let tokenId = createRandomString(20);
                         let expair = Date.now() + 60 *60 *1000;
+                        const tokenObject = {
+                            phone,
+                            token: tokenId,
+                            expair
+                        }
                     }else{
                         callback(400, {Error: "Password not match"})
                     }
