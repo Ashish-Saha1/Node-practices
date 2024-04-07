@@ -9,7 +9,8 @@
 
     const data = require('../../lib/data');
     const utilities = require("../../helper/utilities");
-const { user } = require('../../route');
+    const { user } = require('../../route');
+    const tokenHandlar = require("./tokenhandlar");
 
     //Modele scaffolding
 
@@ -77,24 +78,34 @@ const { user } = require('../../route');
         const phone = typeof(requestProperties.quaryObject.phone) === 'string' && requestProperties.quaryObject.phone.trim().length === 11 ? requestProperties.quaryObject.phone: false;
 
         if(phone){
-            data.read('users', phone, (err, u)=>{
-                const user = {...utilities.parseJson(u)}
-                if(user && !err){
-                    delete user.password;
-                    callback(200, user)
+            // Authentication check
+            let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false; 
+            tokenHandlar._token.verify(token, phone, (tokenId)=>{
+                if(tokenId){
+                    //Lookup 
+                data.read('users', phone, (err, u)=>{
+                    const user = {...utilities.parseJson(u)}
+                    if(user && !err){
+                        delete user.password;
+                        callback(200, user)
+                    }else{
+                        callback(404, `error: ${err}`)
+                                                         
+                    }
+                                                     
+                });
                 }else{
-                    callback(404, `error: ${err}`)
-                    //callback(404, {"Error": "Requested data not found"})
-                                      
+                    callback(403, {Error: "Authentication Failure"})
+                   // Here token TokenID declear false or true based on your phonenumber vs id
+                    console.log(tokenId);
                 }
-
-                //callback(`Error:${err}`, user)
-                                
             })
+
         }else{
             callback(400, {'Error': "A problem found in your request"})
         }
      }
+
 
      handle._user.put = (requestProperties, callback)=>{
         const firstName = typeof(requestProperties.body.firstName) === 'string' && requestProperties.body.firstName.trim().length > 0 ? requestProperties.body.firstName: false;
@@ -106,34 +117,50 @@ const { user } = require('../../route');
        const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 0 ? requestProperties.body.password: true;
 
         if(phone){
+           // Authentication check
+           let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false; 
+           tokenHandlar._token.verify(token, phone, (tokenId)=>{
+               if(tokenId){
+                   //Lookup 
            data.read('users',phone, (err, userD)=>{
-                let userData = {...utilities.parseJson(userD)};
-                if(!err && userData){
-                    if(firstName){
-                        userData.firstName = firstName;
-                    }
-
-                    if(lastName){
-                        userData.lastName = lastName;
-                    }
-
-                    if(password){
-                        userData.password = utilities.hash(password);
-                    }
-
-                    data.update('users',phone, userData, (err)=>{
-                        if(!err){
-                            callback(200, {Massege: "Data update successfully"})
-                        }else{
-                            callback(500, {Error: "server side problem"})
-                        }
-                    })
-
-
-                }else{
-                    callback(400, {Error: "User Not found"})
+            let userData = {...utilities.parseJson(userD)};
+            if(!err && userData){
+                if(firstName){
+                    userData.firstName = firstName;
                 }
+
+                if(lastName){
+                    userData.lastName = lastName;
+                }
+
+                if(password){
+                    userData.password = utilities.hash(password);
+                }
+
+                data.update('users',phone, userData, (err)=>{
+                    if(!err){
+                        callback(200, {Massege: "Data update successfully"})
+                    }else{
+                        callback(500, {Error: "server side problem"})
+                    }
+                })
+
+
+            }else{
+                callback(400, {Error: "User Not found"})
+            }
+       })
+
+
+               }else{
+                   callback(403, {Error: "Authentication Failure"})
+                  // Here token TokenID declear false or true based on your phonenumber vs id
+                   console.log(tokenId);
+               }
            })
+            
+
+          
            
 
 
@@ -149,6 +176,11 @@ const { user } = require('../../route');
         const phone = typeof(requestProperties.quaryObject.phone) === 'string' && requestProperties.quaryObject.phone.trim().length === 11 ? requestProperties.quaryObject.phone: false;
 
         if(phone){
+            // Authentication check
+            let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false; 
+            tokenHandlar._token.verify(token, phone, (tokenId)=>{
+                if(tokenId){
+                     //Lookup
             data.read('users', phone, (err)=>{
                 if(!err){
                     data.delete('users',phone, (err)=>{
@@ -162,6 +194,14 @@ const { user } = require('../../route');
                     callback(400, {Error: "file Not found"})
                 }
             })
+               
+                }else{
+                    callback(403, {Error: "Authentication Failure"})
+                   // Here token TokenID declear false or true based on your phonenumber vs id
+                    console.log(tokenId);
+                }
+            })
+           
         }else{
             callback(400, {Error: "Please input valid Phone "})
         }

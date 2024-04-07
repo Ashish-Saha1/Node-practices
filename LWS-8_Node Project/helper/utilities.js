@@ -34,10 +34,9 @@ utility.hash = (str)=>{
     if(typeof(str) === 'string' && str.length > 0){
         const hash = crypto
         .createHmac('sha256', environment.secretKey)
-        .update('str')
+        .update(str)
         .digest('hex');
         // To show the Hash key in console
-        console.log("Hash key:",hash)
         return hash;
     }else{
         return false;
@@ -46,19 +45,42 @@ utility.hash = (str)=>{
 
 
 
-utility.createRandomString = (string)=>{
-    const probableCharacter = 'abcdefghijklmnopqrstuvwxyz1234567890'
-    let output = '';
-    for(let i =1; i<=string; i++){
-        let random = Math.round(Math.random()*probableCharacter.length)
-       output += probableCharacter.charAt(random)
-    }
+// utility.createRandomString = (string)=>{
+//     const probableCharacter = 'abcdefghijklmnopqrstuvwxyz1234567890'
+//     let output = '';
+//     for(let i =1; i<=string; i++){
+//         let random = Math.floor(Math.random()*probableCharacter.length)
+//        output += probableCharacter.charAt(random)
+//     }
+//     console.log(output.length);
+//     return output;
+// }
 
-    return output;
-}
+utility.createRandomString = (stringNumber)=>{
+    let stringN = stringNumber;
+    stringN = typeof(stringN) === 'number' && stringN>0? stringN:false
+
+    if(stringN){
+        const probableCharacter = 'abcdefghijklmnopqrstuvwxyz1234567890'
+        let output = '';
+        for(let i =1; i<=stringN; i++){
+            let random = Math.floor(Math.random()*probableCharacter.length)
+        output += probableCharacter.charAt(random)
+        }
+          
+        return output;
+
+        }else{
+            return false;
+            }
+       
+        }
+       
+    
+    
+    
 
 
-console.log('');
 
 
 
