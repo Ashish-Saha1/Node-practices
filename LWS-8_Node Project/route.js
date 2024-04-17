@@ -11,6 +11,7 @@ const {aboutHandlar} = require('./Handlar/Route Handlar/aboutHandlar')
 const {blankHandlar} = require('./Handlar/Route Handlar/blankHandlar')
 const {userHandlar} = require('./Handlar/Route Handlar/userHandlar')
 const {tokenHandlar} = require('./Handlar/Route Handlar/tokenhandlar')
+const {checkHandlar} = require('./Handlar/Route Handlar/checkHandlar')
 
 // Module Scaffolding
 
@@ -19,7 +20,8 @@ const routes = {
     about: aboutHandlar,
     "": blankHandlar,
     user: userHandlar,
-    token: tokenHandlar
+    token: tokenHandlar,
+    check: checkHandlar
 };
 
 
