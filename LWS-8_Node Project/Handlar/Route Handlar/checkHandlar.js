@@ -11,6 +11,7 @@
     const utilities = require("../../helper/utilities");
     const { user } = require('../../route');
     const tokenHandlar = require("./tokenhandlar");
+    const {maxChecks} = require('../../helper/environment')
 
     //Modele scaffolding
 
@@ -44,7 +45,57 @@
        if(protocol && url && method && successCode && timeOutSecond){
         let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
         
-        //LookUp
+        //LookUp the user phone read the token
+        data.read('tokens', token, (err, tokenData)=>{
+            if(!err && tokenData){
+                const userPhone = utilities.parseJson(tokenData).phone;
+                // Lookup the user Data
+                data.read('users', user, (err, userData)=>{
+                    if(!err && userData){
+                        tokenHandlar._token.verify(token, phone, (tokenIsValid)=>{
+                            if(tokenIsValid){
+                                const userObject = utilities.parseJson(userData);
+                                const userChecks = typeof(userObject.checks) === 'object' && userObject.checks instanceof Array ? userObject.checks: [];
+
+                                if(userChecks.length < maxChecks){
+                                    const checkId = utilities.createRandomString(20);
+                                    const checkObject = {
+                                        id: checkId,
+                                        userPhone: phone,
+                                        protocol,
+                                        url,
+                                        method,
+                                        successCode,
+                                        timeOutSecond
+                                    }
+                                    //Save the checkObject
+                                    data.create('checks', checkId, checkObject, (err)=>{
+                                        if(!err){
+
+                                        }else{
+                                            callback(500, {'Error': "Server Side problem"}) 
+                                        }
+                                    })
+
+
+
+                                }else{
+                                    callback(403, {'Error': "User has already reach max check limit"}) 
+                                }
+
+                            }else{
+                                callback(403, {'Error': "Authentication problem"}) 
+                            }
+                        })
+                    }else{
+                        callback(403, {'Error': "User not found"})
+                    }
+                })
+            }else{
+                callback(403, {'Error': "Authentication problem"})
+            } 
+            }
+        })
 
 
        }else{
