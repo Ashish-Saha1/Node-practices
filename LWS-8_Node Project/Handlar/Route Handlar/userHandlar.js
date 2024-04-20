@@ -21,6 +21,7 @@
             
         if(acceptedMothods.indexOf(requestProperties.method) > -1){
             handle._user[requestProperties.method](requestProperties,callback)
+            console.log(requestProperties.method);
         }else{
             callback(405)
         }

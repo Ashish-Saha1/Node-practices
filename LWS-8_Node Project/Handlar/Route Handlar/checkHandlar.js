@@ -23,7 +23,9 @@
         if(acceptedMothods.indexOf(requestProperties.method) > -1){
             handle._check[requestProperties.method](requestProperties,callback)
         }else{
-            callback(405)
+            callback(405, {Error: 'Method not allowed'})
+            console.log(`Error is ${requestProperties.method}`);
+            console.log(acceptedMothods.indexOf(requestProperties.method))
         }
         
     }
@@ -36,7 +38,7 @@
 
        const url = typeof(requestProperties.body.url) === 'string' && requestProperties.body.url.trim().length > 0 ? requestProperties.body.url:false;
 
-       const method = typeof(requestProperties.body.method) === 'string' && ['post','get','put','delete'].indexOf(requestProperties.body.method) > -1 ? requestProperties.body.method:false;
+       const method = typeof(requestProperties.body.method) === 'string' && ['POST','GET','PUT','DELETE'].indexOf(requestProperties.body.method) > -1 ? requestProperties.body.method:false;
 
        const successCode = typeof(requestProperties.body.successCode) === 'object' && requestProperties.body.successCode instanceof Array? requestProperties.body.successCode: false;
 
@@ -44,7 +46,7 @@
 
        if(protocol && url && method && successCode && timeOutSecond){
         let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
-        
+        console.log(protocol);
         //LookUp the user phone read the token
         data.read('tokens', token, (err, tokenData)=>{
             if(!err && tokenData){
@@ -52,7 +54,7 @@
                 // Lookup the user Data
                 data.read('users', user, (err, userData)=>{
                     if(!err && userData){
-                        tokenHandlar._token.verify(token, phone, (tokenIsValid)=>{
+                        tokenHandlar._token.verify(token, userPhone, (tokenIsValid)=>{
                             if(tokenIsValid){
                                 const userObject = utilities.parseJson(userData);
                                 const userChecks = typeof(userObject.checks) === 'object' && userObject.checks instanceof Array ? userObject.checks: [];
@@ -61,7 +63,7 @@
                                     const checkId = utilities.createRandomString(20);
                                     const checkObject = {
                                         id: checkId,
-                                        userPhone: phone,
+                                        userPhone,
                                         protocol,
                                         url,
                                         method,
@@ -71,6 +73,18 @@
                                     //Save the checkObject
                                     data.create('checks', checkId, checkObject, (err)=>{
                                         if(!err){
+                                           //Add check check ID to the users objecy
+                                           userObject.checks = userChecks;
+                                           userObject.checks.push(checkId)
+
+                                           //save the new user data
+                                    data.update('users', userPhone, userObject, (err)=>{
+                                        if(!err){
+                                            callback(200, checkObject)
+                                        }else{
+                                            callback(500, {'Error': "Server Side problem to update data"})
+                                        }
+                                    })
 
                                         }else{
                                             callback(500, {'Error': "Server Side problem"}) 
@@ -94,36 +108,36 @@
             }else{
                 callback(403, {'Error': "Authentication problem"})
             } 
-            }
-        })
+            })
+        
 
 
        }else{
         callback(400, {'Error': "A problem found in your Input"})
+        console.log(protocol, url, method, successCode, timeOutSecond);
        }
 
 
-
-
-
-
+console.log('ok')
     }
 
-    handle._check.get = (requestProperties, callback)=>{
+
+
+    // handle._check.get = (requestProperties, callback)=>{
        
-     }
+    //  }
 
 
-     handle._check.put = (requestProperties, callback)=>{
+    //  handle._check.put = (requestProperties, callback)=>{
         
 
 
 
-     }
+    //  }
 
-     handle._check.delete = (requestProperties, callback)=>{
+    //  handle._check.delete = (requestProperties, callback)=>{
        
-     }
+    //  }
 
 
     module.exports= handle;
