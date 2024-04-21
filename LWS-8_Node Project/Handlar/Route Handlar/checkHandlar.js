@@ -46,13 +46,13 @@
 
        if(protocol && url && method && successCode && timeOutSecond){
         let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
-        console.log(protocol);
+    
         //LookUp the user phone read the token
         data.read('tokens', token, (err, tokenData)=>{
             if(!err && tokenData){
                 const userPhone = utilities.parseJson(tokenData).phone;
                 // Lookup the user Data
-                data.read('users', user, (err, userData)=>{
+                data.read('users', userPhone, (err, userData)=>{
                     if(!err && userData){
                         tokenHandlar._token.verify(token, userPhone, (tokenIsValid)=>{
                             if(tokenIsValid){
@@ -98,15 +98,19 @@
                                 }
 
                             }else{
-                                callback(403, {'Error': "Authentication problem"}) 
+                                callback(403, {'Error': "Authentication problem Line-58"}) 
                             }
                         })
                     }else{
-                        callback(403, {'Error': "User not found"})
+                        callback(403, {'Error': "User not found line-56"})
+                        console.log(user);
+                        
                     }
                 })
             }else{
-                callback(403, {'Error': "Authentication problem"})
+                callback(403, {'Error': "Authentication problem Line-52"})
+                
+                
             } 
             })
         
@@ -123,21 +127,47 @@ console.log('ok')
 
 
 
-    // handle._check.get = (requestProperties, callback)=>{
-       
-    //  }
+    handle._check.get = (requestProperties, callback)=>{
+        const id = typeof(requestProperties.quaryObject.id) === 'string' && requestProperties.quaryObject.id.trim().length === 20 ? requestProperties.quaryObject.id: false;
+
+        if(id){
+            data.read('checks', id, (err, checkData)=>{
+                if(!err && checkData){
+                    let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
+
+                tokenHandlar._token.verify(token, utilities.parseJson(checkData).phone, (tokenIsValid)=>{
+                    if(tokenIsValid){
+                        callback(200, utilities.parseJson(checkData))
+                    }else{
+                        callback(403, {'Error': "Authentication Failur line-139"})
+                        console.log(err);
+                        
+                    }
+
+                    })
+                }else{
+                    callback(500, {'Error': "You have a problem in your request line-133"})
+                }
+            })
+        }else{
+            callback(500, {'Error': "You have a problem in your request line-133"})
+                                        
+        }
 
 
-    //  handle._check.put = (requestProperties, callback)=>{
+     }
+
+
+     handle._check.put = (requestProperties, callback)=>{
         
 
 
 
-    //  }
+     }
 
-    //  handle._check.delete = (requestProperties, callback)=>{
+     handle._check.delete = (requestProperties, callback)=>{
        
-    //  }
+     }
 
 
     module.exports= handle;
