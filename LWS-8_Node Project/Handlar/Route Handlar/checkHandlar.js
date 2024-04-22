@@ -135,13 +135,12 @@ console.log('ok')
                 if(!err && checkData){
                     let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
 
-                tokenHandlar._token.verify(token, utilities.parseJson(checkData).phone, (tokenIsValid)=>{
+                tokenHandlar._token.verify(token, utilities.parseJson(checkData).userPhone, (tokenIsValid)=>{
                     if(tokenIsValid){
                         callback(200, utilities.parseJson(checkData))
                     }else{
                         callback(403, {'Error': "Authentication Failur line-139"})
-                        console.log(err);
-                        
+                     
                     }
 
                     })
@@ -158,9 +157,40 @@ console.log('ok')
      }
 
 
-     handle._check.put = (requestProperties, callback)=>{
-        
+     handle._check.put = (requestProperties, callback)=>{    
+        const id = typeof(requestProperties.body.id) === 'string' && requestProperties.body.id.trim().length === 20?requestProperties.body.id:false;
 
+        const protocol = typeof(requestProperties.body.protocol) === 'string' && ['http','https'].indexOf(requestProperties.body.protocol)> -1? requestProperties.body.protocol:false;
+
+       const url = typeof(requestProperties.body.url) === 'string' && requestProperties.body.url.trim().length > 0 ? requestProperties.body.url:false;
+
+       const method = typeof(requestProperties.body.method) === 'string' && ['POST','GET','PUT','DELETE'].indexOf(requestProperties.body.method) > -1 ? requestProperties.body.method:false;
+
+       const successCode = typeof(requestProperties.body.successCode) === 'object' && requestProperties.body.successCode instanceof Array? requestProperties.body.successCode: false;
+
+       const timeOutSecond = typeof(requestProperties.body.timeOutSecond) === 'number' && requestProperties.body.timeOutSecond % 1 === 0 && requestProperties.body.timeOutSecond >= 1 && requestProperties.body.timeOutSecond <= 5? requestProperties.body.timeOutSecond: false;
+
+       if(id){
+            if(protocol || url || method || successCode || timeOutSecond){
+                data.read('checks', id, (err, checkData)=>{
+                    if(!err && checkData){
+                        let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
+
+                        tokenHandlar._token.verify(token, utilities.parseJson(checkData).userPhone, (tokenIsValid)=>{
+                            if(tokenIsValid){
+
+                            }else{
+                                callback(403, {'Error': "Authentication failure line-180"}) 
+                            }
+                        })
+                    }
+                } )
+            }else{
+                callback(500, {'Error': "You have to provide at least one field line-176"}) 
+            }
+       }else{
+        callback(500, {'Error': "You have a problem in your request-ID line-173"})
+       }
 
 
      }
