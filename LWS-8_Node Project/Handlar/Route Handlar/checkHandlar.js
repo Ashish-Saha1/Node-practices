@@ -175,10 +175,33 @@ console.log('ok')
                 data.read('checks', id, (err, checkData)=>{
                     if(!err && checkData){
                         let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
-
-                        tokenHandlar._token.verify(token, utilities.parseJson(checkData).userPhone, (tokenIsValid)=>{
+                        let checkObject = utilities.parseJson(checkData);
+                        tokenHandlar._token.verify(token, checkObject.userPhone, (tokenIsValid)=>{
                             if(tokenIsValid){
+                                if(protocol){
+                                    checkObject.protocol = protocol;
+                                }
+                                if(url){
+                                    checkObject.url = url;
+                                }
+                                if(method){
+                                    checkObject.method = method;
+                                }
+                                if(successCode){
+                                    checkObject.successCode = successCode;
+                                }
+                                if(timeOutSecond){
+                                    checkObject.timeOutSecond = timeOutSecond;
+                                }
 
+                                //Store the checkobject
+                                data.update('checks', id, checkObject, (err)=>{
+                                    if(!err){
+                                        callback(200)
+                                    }else{
+                                        callback(500, {'Error': "Server side error to update data line-199"}) 
+                                    }
+                                })
                             }else{
                                 callback(403, {'Error': "Authentication failure line-180"}) 
                             }
@@ -196,7 +219,60 @@ console.log('ok')
      }
 
      handle._check.delete = (requestProperties, callback)=>{
-       
+        const id = typeof(requestProperties.quaryObject.id) === 'string' && requestProperties.quaryObject.id.trim().length === 20 ? requestProperties.quaryObject.id: false;
+
+        if(id){
+            data.read('checks', id, (err, checkData)=>{
+                if(!err && checkData){
+                    let token = typeof(requestProperties.headersObject.token) === 'string'? requestProperties.headersObject.token : false;
+
+                tokenHandlar._token.verify(token, utilities.parseJson(checkData).userPhone, (tokenIsValid)=>{
+                    if(tokenIsValid){
+                        data.delete('checks', id, (err)=>{
+                            if(!err){
+                                
+                                data.read('users', utilities.parseJson(checkData).userPhone, (err, userData)=>{
+                                    let userObject = utilities.parseJson(userData);
+                                    if(!err && userData){
+                                        const userChecks = typeof(userObject.checks) === 'object' && userObject.checks instanceof Array ? userObject.checks: [];
+
+                                        if(userChecks.indexOf(id) > -1){
+                                            userChecks.splice(userChecks.indexOf(id), 1)
+                                            //resave the data
+                                            userObject.checks = userChecks;
+                                            data.update('users',userObject.phone, userObject, (err)=>{
+                                                if(!err){
+                                                    callback(200)
+                                                }else{
+                                                    callback( 500,'Error: {"Server error line-244"}')
+                                                }
+                                            })
+                                        }else{
+                                            callback( 500,'Error: {"No ID exits or not match"}')
+                                        }
+                                    }else{
+                                        callback(500, {'Error': "Server Problem Line-236"}) 
+                                    }
+
+                                })
+                            }else{
+                                callback(500, {'Error': "Server Problem "})
+                            }
+                        })
+                    }else{
+                        callback(403, {'Error': "Authentication Failur "})
+                     
+                    }
+
+                    })
+                }else{
+                    callback(500, {'Error': "You have a problem in your request "})
+                }
+            })
+        }else{
+            callback(500, {'Error': "You have a problem in your request "})
+                                        
+        }
      }
 
 
