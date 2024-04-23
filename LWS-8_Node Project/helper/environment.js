@@ -17,7 +17,11 @@ environments.staging = {
     envName: "staging-Check", // Name is not environments.staging is working
     port: 3000,
     secretKey: "ieurieuriueir",
-    maxChecks: 5
+    maxChecks: 5,
+    twilio: {
+        fromPhone: '',
+        
+    }
 }
 
 environments.production = {
