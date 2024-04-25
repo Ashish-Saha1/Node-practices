@@ -19,8 +19,9 @@ environments.staging = {
     secretKey: "ieurieuriueir",
     maxChecks: 5,
     twilio: {
-        fromPhone: '',
-        
+        fromPhone: '+15005550006',
+        accountSid: '',
+        authToken: ''
     }
 }
 
@@ -28,7 +29,12 @@ environments.production = {
     envName: "production-Check",
     port: 5000,
     secretKey: "dfdfdfdfdfdfd",
-    maxChecks: 5
+    maxChecks: 5,
+    twilio: {
+        fromPhone: '+15005550006',
+        accountSid: '',
+        authToken: ''
+    }
 }
 
 

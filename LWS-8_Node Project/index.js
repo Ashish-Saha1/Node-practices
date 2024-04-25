@@ -6,42 +6,18 @@ const http = require('http');
 const {handleReqRes} = require('./helper/handleReqRes');
 const environments = require('./helper/environment');
 const data = require('./lib/data');
-const { error } = require('console');
+const { sendTwilioSms } = require('./helper/notification');
 
 
 //App object - Module Scaffolding
 
 const app = {};
 
-// configuration
+//For check & delete next time
 
-// app.config = {
-//     port: 3000
-// };
-
-// File write Testing
-
-// data.create('test', 'NewFile', {'name': 'Bangladesh', 'language': 'Bangla'}, (error)=>{
-//     console.log('Error is', error);
-// })
-
-// File Read
-
-// data.read('test', 'NewFile', (error, result)=>{
-//     console.log(error, result);
-// })
-
-//File Update
-
-// data.update('test', 'NewFile', {'name': 'India', 'language': 'Hindi'}, (error)=>{
-//     console.log('Error is', error);
-// })
-
-//File delete
-
-// data.delete('test', 'NewFile', (error)=>{
-//     console.log(error)
-// })
+sendTwilioSms('01717712627', "Hellow world", (err)=>{
+    console.log('The Error was', err);
+})
 
 
 //Server Create
