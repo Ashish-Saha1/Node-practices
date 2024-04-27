@@ -1,38 +1,36 @@
 
+/**
+ * Title: Initial File
+ * Description: initail file to statrt server & worker
+ * Author: Ashish Saha
+ * Date: 2024-04-27
+ */
+
+
+
 //Dependancies
 
-const http = require('http');
-
-const {handleReqRes} = require('./helper/handleReqRes');
-const environments = require('./helper/environment');
-const data = require('./lib/data');
-const { sendTwilioSms } = require('./helper/notification');
+const server = require('./lib/server');
+const worker = require('./lib/worker');
 
 
 //App object - Module Scaffolding
 
 const app = {};
 
-//For check & delete next time
+app.init = ()=>{
+    // start the server
+    server.init()
 
-sendTwilioSms('01717712627', "Hellow world", (err)=>{
-    console.log('The Error was', err);
-})
+    //start the worker
 
-
-//Server Create
-
-app.serverCreate = function(){
-    const server = http.createServer(app.handleReqRes);
-    server.listen(environments.port, ()=>{
-        console.log(`Node environment is running in production port ${environments.port}`)
-        console.log(`Server is running on port no ${environments.port}`)
-    })
+    worker.init()
 }
 
-app.handleReqRes = handleReqRes;
 
-app.serverCreate();
+app.init();
+
+module.exports = app;
 
 
 
