@@ -19,10 +19,28 @@
 
 const worker = {};
 
+//Lookup all the check
+worker.getherAllChecks = ()=>{
+    
+}
+
+
+//Timer to execute worket process once a munute
+    worker.loop = ()=>{
+        setInterval(() => {
+            worker.getherAllChecks()
+        }, 1000*60);
+    }
+
 //start the worker
 worker.init = ()=>{
-    console.log('Workers Started');
+    //lookup all the checks
+    worker.getherAllChecks();
+
+    //Call the loop so that checks continue
+    worker.loop()
 };
 
+//Exports
  module.exports = worker;
 
