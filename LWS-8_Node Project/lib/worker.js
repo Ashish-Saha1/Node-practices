@@ -9,7 +9,8 @@
 
 
 //Dependancies
-
+const data = require('./data');
+const { parseJson } = require('../helper/utilities')
 
 
 
@@ -21,6 +22,29 @@ const worker = {};
 
 //Lookup all the check
 worker.getherAllChecks = ()=>{
+    data.list('checks', (err, checks)=>{
+        if(!err && checks && checks.length > 0){
+            checks.forEach((check)=>{
+                //Read the check data
+                data.read('check', (err, orginalCheckData)=>{
+                    if(!err && orginalCheckData){
+                        // Pass the data to the validator function
+                        worker.validateCheckData(parseJson(orginalCheckData))
+                    }else{
+                        console.log('Error: Reading one of the check data');
+                    }
+                })
+            })
+        }else{
+            console.log('Error: Could not find any checks to process');
+        }
+    })
+}
+
+
+// Validate the Data
+
+worker.validateCheckData = ()=>{
     
 }
 
