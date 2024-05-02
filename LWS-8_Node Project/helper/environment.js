@@ -31,9 +31,10 @@ environments.production = {
     secretKey: "dfdfdfdfdfdfd",
     maxChecks: 5,
     twilio: {
-        fromPhone: '+15005550006',
+        fromPhone: '',
         accountSid: '',
-        authToken: ''
+        authToken: '',
+
     }
 }
 

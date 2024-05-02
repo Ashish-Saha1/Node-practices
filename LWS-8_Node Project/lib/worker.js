@@ -148,6 +148,7 @@ worker.processCheckOutCome = (orginalCheckData, checkOutCome)=>{
             worker.alertUserToStatusChange(newCheckData)
            }else{
             console.log('Alert is not needed as there is not status chenge');
+            console.log(orginalCheckData.state, state, !checkOutCome.error,checkOutCome.responseCode);
            }
         }else{
             console.log('Error: trying to save check data of one of the checks');
@@ -166,6 +167,7 @@ worker.alertUserToStatusChange = (newCheckData)=>{
             console.log(`User was alerted through SMS ${msg}` );
         }else{
             console.log('There was a problem to sending sms to users');
+            console.log(err);
         }
     })
 }
